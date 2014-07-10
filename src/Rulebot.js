@@ -45,6 +45,21 @@
 			},
 			maxLength: function(val, max) {
 				return !!val.length <= min;
+			},
+			multiple: function(val, opts) {
+
+			},
+			naturalNumber: function(val, allowZero) {
+
+			},
+			range: function(val, lower, higher) {
+
+			},
+			url: function(val, strict) {
+
+			},
+			uuid: function(val) {
+
 			}
 		};
 
