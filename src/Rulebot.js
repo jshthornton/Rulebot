@@ -1,4 +1,4 @@
-(function(undefined) {
+(function(win, undefined) {
 	'use strict';
 
 	function _do(_) {
@@ -47,19 +47,115 @@
 				return !!val.length <= min;
 			},
 			multiple: function(val, opts) {
-
+				_.every(opts, function(args, key) {
+					console.log(args, key)
+				}, this);
 			},
 			naturalNumber: function(val, allowZero) {
+				if(typeof val !== 'number') return false;
 
+				if(val < 0) {
+					return false;
+				}
+
+				var formatted = val >> 0;
+
+				if(val === 0) {
+					return !!allowZero;
+				}
+
+				if(formatted === val) {
+					return true;
+				}
+
+				return false;
 			},
-			range: function(val, lower, higher) {
+			range: function(val, lower, higher, inclusive) {
+				if(inclusive === undefined) {
+					inclusive = true;
+				}
 
+				if(inclusive) {
+					return (val >= lower && val <= higher);
+				}
+				if(!inclusive) {
+					return (val > lower && val < higher);
+				}
 			},
 			url: function(val, strict) {
 
 			},
-			uuid: function(val) {
+			uuid: function(val, opts) {
+				opts = opts || {};
+				opts = _.defaults(opts, {
+					brackets: false,
+					hyphens: true,
+					casesensitive: false
+				});
 
+				function getCacheKey(opts) {
+					return 'bracket=' + opts.brackets +';hyphens=' + opts.hyphens + ';casesensitive=' + opts.casesensitive; 
+				};
+
+				function buildRegex(opts) {
+					var regexStr = '',
+						block = '[0-9a-f]',
+						blockSizes = [8, 4, 4, 4, 12];
+
+					for(var i = 0; i < blockSizes.length; i++) {
+						if(i === 0 && opts.brackets) {
+							regexStr += '\{';
+
+							if(opts.brackets === 'both') {
+								regexStr += '?';
+							}
+						}
+
+						regexStr += block + '{' + blockSizes[i] + '}';
+
+						if(opts.hyphens && i < blockSizes.length - 1) {
+							regexStr += '-';
+
+							if(opts.hyphens === 'both') {
+								regexStr += '?';
+							}
+						}
+
+						if(i === blockSizes.length - 1 && opts.brackets) {
+							regexStr += '\}';
+
+							if(opts.brackets === 'both') {
+								regexStr += '?';
+							}
+						}
+					}
+
+					if(opts.casesensitive) {
+						if(opts.casesensitive === 'upper') {
+							regexStr = regexStr.toUpperCase();
+						}
+
+						return new RegExp(regexStr);
+					}
+					
+					return new RegExp(regexStr, 'i');
+				}
+
+				var regex,
+					cacheKey = getCacheKey(opts);
+
+				if(typeof this.__uuidRegExCache === 'undefined') {
+					this.__uuidRegExCache = {};
+					regex = buildRegex(opts);
+					this.__uuidRegExCache[cacheKey] = regex;
+				} else if(this.__uuidRegExCache[cacheKey]) {
+					regex = this.__uuidRegExCache[cacheKey];
+				} else {
+					regex = buildRegex(opts);
+					this.__uuidRegExCache[cacheKey] = regex;
+				}
+				
+				return regex.test(val);
 			}
 		};
 
@@ -88,8 +184,18 @@
 				}, this);
 			},
 
+			removeRule: function(name) {
+				delete this.rules[name];
+			},
+
+			removeRules: function(rules) {
+				_.forEach(rules, function(name) {
+					this.removeRule(name);
+				}, this);
+			},
+
 			test: function(rule) {
-				return this.rules[rule](_.rest(arguments));
+				return this.rules[rule].apply(this.rules, _.rest(arguments));
 			}
 		});
 
@@ -101,4 +207,4 @@
 	} else {
 		win.Rulebot = _do(_);
 	}
-}());
+}(window));

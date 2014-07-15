@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Various</title>
+</head>
+<body>
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
+	<script src="../src/Rulebot.js"></script>
+	<script>
+		(function() {
+			var verify = function(result, expected) {
+			    if(result !== expected) {
+			    	throw new Error('Result was unexpected');
+			    }
+			};
+
+			var rulebot = new Rulebot();
+
+			verify(rulebot.test('alphaNumeric', 'abc'), true);
+			verify(rulebot.test('alphaNumeric', '123'), true);
+			verify(rulebot.test('alphaNumeric', ''), true);
+			verify(rulebot.test('alphaNumeric', '-'), false);
+
+			verify(rulebot.test('uuid', 'f47ac10b-58cc-4372-a567-0e02b2c3d479'), true);
+			verify(rulebot.test('uuid', 'f47ac10b58cc4372a5670e02b2c3d479', {
+				hyphens: 'both'
+			}), true);
+			verify(rulebot.test('uuid', 'f47ac10b-58cc-4372-a567-0e02b2c3d479', {
+				hyphens: 'both'
+			}), true);
+
+
+		}());
+	</script>
+</body>
+</html>
