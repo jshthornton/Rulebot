@@ -41,10 +41,10 @@
 				return false;
 			},
 			minLength: function(val, min) {
-				return !!val.length >= min;
+				return !!(val.length >= min);
 			},
 			maxLength: function(val, max) {
-				return !!val.length <= min;
+				return !!(val.length <= min);
 			},
 			multiple: function(val, opts) {
 				_.every(opts, function(args, key) {
