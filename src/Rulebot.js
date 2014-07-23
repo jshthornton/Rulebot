@@ -5,8 +5,9 @@
 		var coreRules, Rulebot;
 
 		coreRules = {
-			alphaNumeric: function(val) {
-				var regex = /^[a-zA-Z0-9_]*$/
+			alphaNumeric: function(val, extras) {
+				var regexStr = '^[a-zA-Z0-9' + extras + ']*$',
+					regex = new RegExp(regexStr);
 				return regex.test(val);
 			},
 			between: function(val, min, max) {
