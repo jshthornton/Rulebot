@@ -21,7 +21,12 @@
 				return regex.test(val);
 			},
 			extension: function(val, exts) {
+				var regex,
+					extStr = exts.join('|'),
+					regexStr = '\.(' + extStr + ')$';
 
+				regex = new RegExp(regexStr);
+				return regex.test(val);
 			},
 			ip: function(val, type) {
 				var regex;
