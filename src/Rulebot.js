@@ -88,7 +88,9 @@
 				}
 			},
 			url: function(val, strict) {
-
+				// Strict = http | https
+				// Non-strict = ftp | http | https | ...
+				throw new Error('Not yet implemented.');
 			},
 			uuid: function(val, opts) {
 				opts = opts || {};
