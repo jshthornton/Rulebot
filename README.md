@@ -26,7 +26,7 @@ Now that we have an instance of Rulebot we can start running tests against our d
 ### Core rules
 Rulebot comes with some rules / tests out of the box. When you create a new instance of Rulebot these core rules are added to that Rulebot. This can be disabled via `new Rulebot({}, false)`.
 
-- `alphaNumeric` - Tests if they value is only contains alpha numeric characters (including underscore)
+- `alphaNumeric` - Tests if they value is only contains alpha numeric characters
 - `between`
 - `blank`
 - `email`
